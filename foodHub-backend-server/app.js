@@ -4,6 +4,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const multer = require("multer");
+const dotenv = require("dotenv");
+dotenv.config(path.join(__dirname, ".env"));
 
 const authRoutes = require("./routes/auth");
 const itemRoutes = require("./routes/item");
@@ -72,12 +74,12 @@ app.use((error, req, res, next) => {
 const clients = {};
 
 mongoose
-  .connect(
-    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-fvjx9.mongodb.net/${process.env.MONGO_DATABASE}?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass%20Community&ssl=true`
-  )
+  .connect(process.env.MONGODH_URL)
   .then((result) => {
     console.log("Connected to db");
-    const server = app.listen(process.env.PORT || 3002);
+    const server = app.listen(process.env.PORT || 3001, () => {
+      console.log(`Server starts at port ${process.env.PORT}`);
+    });
     const io = require("./util/socket").init(server);
     io.on("connection", (socket) => {
       socket.on("add-user", (data) => {
