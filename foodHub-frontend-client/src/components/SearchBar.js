@@ -102,7 +102,7 @@ export default function CustomizedInputBase(props) {
     };
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        `https://rsapi.goong.io/v2/geocode?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
       )
       .then((result) => {
         console.log(result.data);
@@ -127,7 +127,6 @@ export default function CustomizedInputBase(props) {
       className={page !== "items" ? classes.rootHome : classes.rootItems}
     >
       {page === "home" && <LocationOn className={classes.iconButton} />}
-
       {page === "items" && (
         <InputBase
           className={classes.input}
