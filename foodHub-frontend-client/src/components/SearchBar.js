@@ -1,50 +1,46 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import IconButton from '@material-ui/core/IconButton';
+import Divider from '@material-ui/core/Divider';
+import LocationOn from '@material-ui/icons/LocationOn';
+import SearchIcon from '@material-ui/icons/Search';
+import MyLocation from '@material-ui/icons/MyLocation';
+import axios from 'axios';
 
-import PlacesAutocomplete, {
-  geocodeByAddress,
-  getLatLng,
-} from "react-places-autocomplete";
+// Goong API endpoints
+const GOONG_API_KEY = process.env.REACT_APP_GOONG_API_KEY;
+const AUTOCOMPLETE_ENDPOINT = 'https://rsapi.goong.io/Place/Autocomplete';
+const GEOCODE_ENDPOINT = 'https://rsapi.goong.io/Geocode';
 
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
-import MyLocation from "@material-ui/icons/MyLocation";
-import LocationOn from "@material-ui/icons/LocationOn";
-import SearchIcon from "@material-ui/icons/Search";
-
-import axios from "axios";
-
-import { fetchRestaurantsByAddress } from "../redux/actions/dataActions";
-
+// Giả định makeStyles từ mã gốc
 const useStyles = makeStyles((theme) => ({
   rootHome: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-    width: 860,
+    display: 'flex',
+    alignItems: 'center',
+    width: '90%',
+    margin: 'auto',
+    padding: '2px 4px',
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.shape.borderRadius,
+    ['@media (max-width:1024px)']: { // Giữ responsive như HomeStart
+      flexDirection: 'column',
+    },
   },
   rootItems: {
-    padding: "2px 4px",
-    display: "flex",
-    alignItems: "center",
-    width: 400,
-    backgroundColor: "#edebeb",
+    display: 'flex',
+    alignItems: 'center',
+    width: '90%',
+    margin: 'auto',
+    padding: '2px 4px',
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.shape.borderRadius,
   },
   input: {
     marginLeft: theme.spacing(1),
     flex: 1,
-    position: "relative",
-  },
-  results: {
-    position: "absolute",
-    bottom: -166,
-    left: "26%",
-    zIndex: 999,
-    width: 760,
-    height: "15%",
+    fontSize: 16,
   },
   iconButton: {
     padding: 10,
@@ -53,67 +49,108 @@ const useStyles = makeStyles((theme) => ({
     height: 28,
     margin: 4,
   },
+  results: {
+    position: 'absolute',
+    zIndex: 1000,
+    background: 'white',
+    border: '1px solid #ccc',
+    borderRadius: 4,
+    width: '300px',
+    maxHeight: '200px',
+    overflowY: 'auto',
+  },
 }));
 
-export default function CustomizedInputBase(props) {
-  const classes = useStyles();
-  const [address, setAddress] = useState(
-    localStorage.getItem("location") || ""
+// Component autocomplete với Goong API
+function GoongLocationSearchInput({ value, onChange, onSelect }) {
+  const [suggestions, setSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = async (inputValue) => {
+    onChange(inputValue); // Cập nhật address state từ parent
+    if (inputValue.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${AUTOCOMPLETE_ENDPOINT}?api_key=${GOONG_API_KEY}&input=${encodeURIComponent(inputValue)}&location=21.0285,105.8542`
+      );
+      const data = await response.json();
+      setSuggestions(data.predictions || []);
+    } catch (error) {
+      console.error('Autocomplete error:', error);
+    }
+    setLoading(false);
+  };
+
+  const handleSelect = async (description, placeId) => {
+    onChange(description); // Cập nhật input với description
+    setSuggestions([]); // Ẩn dropdown
+    try {
+      const response = await fetch(`${GEOCODE_ENDPOINT}?place_id=${placeId}&api_key=${GOONG_API_KEY}`);
+      const data = await response.json();
+      const latLng = data.results[0]?.geometry?.location;
+      onSelect({ description, latLng }); // Truyền lên parent
+      console.log('Success:', latLng);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  return (
+    <>
+      <InputBase
+        value={value}
+        onChange={(e) => handleChange(e.target.value)}
+        placeholder="Enter delivery address"
+        className="location-search-input"
+        inputProps={{ 'aria-label': 'search for delivery address' }}
+      />
+      <div className="autocomplete-dropdown-container">
+        {loading && <div>Loading...</div>}
+        {suggestions.map((suggestion, index) => {
+          const style = suggestion.active
+            ? { backgroundColor: '#41b6e6', cursor: 'pointer' }
+            : { backgroundColor: '#fff', cursor: 'pointer' };
+          return (
+            <div
+              key={index}
+              onClick={() => handleSelect(suggestion.description, suggestion.place_id)}
+              style={style}
+              className="suggestion-item"
+            >
+              {suggestion.description}
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
+}
 
-  const page = props.page;
+// Component chính (giữ gần giống HomeStart và mã gốc)
+function SearchBar({ page, handleSearch, getBrowserLocation, fetchRestByLocation }) {
+  const classes = useStyles();
+  const [address, setAddress] = useState('');
 
-  const dispatch = useDispatch();
-
-  const getBrowserLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        getUserAddressBy(position.coords.latitude, position.coords.longitude);
-      },
-      function (error) {
-        alert("The Locator was denied, Please add your address manually");
-      }
-    );
-  };
-
-  const handleSelect = async (value) => {
-    if (value === "") localStorage.removeItem("location");
-    else localStorage.setItem("location", value);
-    setAddress(value);
-    const results = await geocodeByAddress(value);
-    const latlng = await getLatLng(results[0]);
-    if (latlng) localStorage.setItem("latlng", `${latlng.lat}, ${latlng.lng}`);
-    fetchRestByLocation(latlng);
-  };
-
-  const fetchRestByLocation = (latlng) => {
-    dispatch(fetchRestaurantsByAddress(latlng.lat, latlng.lng));
-    props.action(true);
-  };
-
-  const handleSearch = (event) => {
-    props.handleSearch(event.target.value);
-  };
-
-  const getUserAddressBy = (lat, long) => {
-    const latlng = {
-      lat: lat,
-      lng: long,
-    };
+  // Reverse geocoding với Goong API
+  const getUserAddressBy = (lat, lng) => {
+    const latlng = { lat, lng };
     axios
       .get(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        `${GEOCODE_ENDPOINT}?address=${lat},${lng}&api_key=${GOONG_API_KEY}`
       )
       .then((result) => {
         console.log(result.data);
-        if (result.data.results[0].formatted_address === "")
-          localStorage.removeItem("location");
-        else
-          localStorage.setItem(
-            "location",
-            result.data.results[0].formatted_address
-          );
-        setAddress(result.data.results[0].formatted_address);
+        const formattedAddress = result.data.results[0]?.formatted_address || '';
+        if (formattedAddress === '') {
+          localStorage.removeItem('location');
+        } else {
+          localStorage.setItem('location', formattedAddress);
+        }
+        setAddress(formattedAddress);
         fetchRestByLocation(latlng);
       })
       .catch((err) => {
@@ -121,66 +158,40 @@ export default function CustomizedInputBase(props) {
       });
   };
 
+  // Handle select từ autocomplete
+  const handleSelect = (selected) => {
+    setAddress(selected.description); // Cập nhật input
+    // Có thể lưu latLng vào localStorage hoặc state nếu cần
+    localStorage.setItem('location', selected.description);
+  };
+
   return (
     <Paper
       component="form"
-      className={page !== "items" ? classes.rootHome : classes.rootItems}
+      className={page !== 'items' ? classes.rootHome : classes.rootItems}
     >
-      {page === "home" && <LocationOn className={classes.iconButton} />}
+      {page === 'home' && <LocationOn className={classes.iconButton} />}
 
-      {page === "items" && (
+      {page === 'items' && (
         <InputBase
           className={classes.input}
           placeholder="Search Items"
           onChange={handleSearch}
-          inputProps={{ "aria-label": "search for items" }}
+          inputProps={{ 'aria-label': 'search for items' }}
         />
       )}
 
-      {page === "home" && (
-        <PlacesAutocomplete
+      {page === 'home' && (
+        <GoongLocationSearchInput
           value={address}
           onChange={setAddress}
           onSelect={handleSelect}
-        >
-          {({
-            getInputProps,
-            suggestions,
-            getSuggestionItemProps,
-            loading,
-          }) => (
-            <>
-              <InputBase
-                {...getInputProps({
-                  placeholder: "Enter delivery address",
-                })}
-                className={classes.input}
-                inputProps={{
-                  "aria-label": "search google maps for delivery address",
-                }}
-              />
-              <div className={classes.results}>
-                {loading ? <div>Getting Results...</div> : null}
-
-                {suggestions.map((suggestion) => {
-                  const style = suggestion.active
-                    ? { backgroundColor: "#41b6e6", cursor: "pointer" }
-                    : { backgroundColor: "#fff", cursor: "pointer" };
-
-                  return (
-                    <div {...getSuggestionItemProps(suggestion, { style })}>
-                      {suggestion.description}
-                    </div>
-                  );
-                })}
-              </div>
-            </>
-          )}
-        </PlacesAutocomplete>
+        />
       )}
+
       <SearchIcon className={classes.iconButton} />
 
-      {page === "home" && (
+      {page === 'home' && (
         <>
           <Divider className={classes.divider} orientation="vertical" />
           <IconButton
@@ -196,3 +207,5 @@ export default function CustomizedInputBase(props) {
     </Paper>
   );
 }
+
+export default React.memo(SearchBar);
