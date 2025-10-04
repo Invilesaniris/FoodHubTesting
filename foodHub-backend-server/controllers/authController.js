@@ -8,14 +8,14 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Account = require("../models/account");
 const Seller = require("../models/seller");
-
-const transporter = nodemailer.createTransport(
-  sendgridTransport({
-    auth: {
-      api_key: process.env.SENDGRID_KEY,
-    },
-  })
-);
+// NOT Done (học sendgrid)
+// const transporter = nodemailer.createTransport(
+//   sendgridTransport({
+//     auth: {
+//       api_key: process.env.SENDGRID_KEY,
+//     },
+//   })
+// );
 
 exports.signupUser = (req, res, next) => {
   const errors = validationResult(req);
@@ -65,15 +65,15 @@ exports.signupUser = (req, res, next) => {
       return user.save();
     })
     .then((savedUser) => {
-      transporter.sendMail({
-        to: email,
-        from: "YOUR_SENDGRID_VERIFIED_EMAIL",
-        subject: "Verify your Account on FoodHub",
-        html: `
-                      <p>Please verify your email by clicking on the link below - FoodHub</p>
-                      <p>Click this <a href="http://localhost:3002/auth/verify/${token}">link</a> to verify your account.</p>
-                    `,
-      });
+      // transporter.sendMail({
+      //   to: email,
+      //   from: "YOUR_SENDGRID_VERIFIED_EMAIL",
+      //   subject: "Verify your Account on FoodHub",
+      //   html: `
+      //                 <p>Please verify your email by clicking on the link below - FoodHub</p>
+      //                 <p>Click this <a href="http://localhost:3002/auth/verify/${token}">link</a> to verify your account.</p>
+      //               `,
+      // });
       res.status(201).json({
         message:
           "User signed-up successfully, please verify your email before logging in.",
@@ -237,15 +237,15 @@ exports. signupSeller = (req, res, next) => {
       return seller.save();
     })
     .then((savedSeller) => {
-      transporter.sendMail({
-        to: email,
-        from: "YOUR_SENDGRID_VERIFIED_EMAIL",
-        subject: "Verify your Account on FoodHub",
-        html: `
-                      <p>Please verify your email by clicking on the link below - FoodHub</p>
-                      <p>Click this <a href="http://localhost:3002/auth/verify/${token}">link</a> to verify your account.</p>
-                    `,
-      });
+      // transporter.sendMail({
+      //   to: email,
+      //   from: "YOUR_SENDGRID_VERIFIED_EMAIL",
+      //   subject: "Verify your Account on FoodHub",
+      //   html: `
+      //                 <p>Please verify your email by clicking on the link below - FoodHub</p>
+      //                 <p>Click this <a href="http://localhost:3002/auth/verify/${token}">link</a> to verify your account.</p>
+      //               `,
+      // });
       res.status(201).json({
         message:
           "Seller signed-up successfully, please verify your email before logging in.",
