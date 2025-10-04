@@ -52,6 +52,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/auth", upload.array("images", 10), authRoutes);
+// app.use("/auth", authRoutes);
 app.use("/seller", upload.single("image"), itemRoutes);
 app.use(userRoutes);
 

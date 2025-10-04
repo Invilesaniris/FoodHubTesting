@@ -155,7 +155,7 @@ exports.login = (req, res, next) => {
     });
 };
 
-exports.signupSeller = (req, res, next) => {
+exports. signupSeller = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
