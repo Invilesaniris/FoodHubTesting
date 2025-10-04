@@ -10,6 +10,16 @@ import LocationOn from "@material-ui/icons/LocationOn";
 import SearchIcon from "@material-ui/icons/Search";
 import axios from "axios";
 import { fetchRestaurantsByAddress } from "../redux/actions/dataActions";
+import debouncing from "../util/rateLimitting/debouncing";
+
+const processAutoComplete = debouncing(async (input, setSuggestions) => {
+  const response = await axios.get(
+    `https://rsapi.goong.io/Place/Autocomplete?api_key=${
+      process.env.REACT_APP_GOONG_API_KEY
+    }&input=${encodeURIComponent(input)}`
+  );
+  setSuggestions(response.data.predictions || []);
+}, 2000);
 
 const useStyles = makeStyles((theme) => ({
   rootHome: {
@@ -49,7 +59,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SearchBar(props) {
   const classes = useStyles();
-  const [address, setAddress] = useState(localStorage.getItem("location") || "");
+  const [address, setAddress] = useState(
+    localStorage.getItem("location") || ""
+  );
   const page = props.page;
   const dispatch = useDispatch();
 
@@ -116,7 +128,9 @@ export default function SearchBar(props) {
   const getLatLngFromGoong = async (address) => {
     try {
       const response = await axios.get(
-        `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(address)}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
+        `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(
+          address
+        )}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
       );
       const results = response.data.results;
       if (results.length > 0) {
@@ -137,10 +151,13 @@ export default function SearchBar(props) {
     }
     setLoading(true);
     try {
-      const response = await axios.get(
-        `https://rsapi.goong.io/Place/Autocomplete?api_key=${process.env.REACT_APP_GOONG_API_KEY}&input=${encodeURIComponent(input)}&location=21.0285,105.8542`
-      );
-      setSuggestions(response.data.predictions || []);
+      // const response = await axios.get(
+      //   `https://rsapi.goong.io/Place/Autocomplete?api_key=${
+      //     process.env.REACT_APP_GOONG_API_KEY
+      //   }&input=${encodeURIComponent(input)}`
+      // );
+      // setSuggestions(response.data.predictions || []);
+      processAutoComplete(input, setSuggestions);
     } catch (error) {
       console.error("Error fetching suggestions from Goong API:", error);
       setSuggestions([]);
