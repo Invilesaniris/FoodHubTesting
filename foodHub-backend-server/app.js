@@ -13,7 +13,8 @@ const userRoutes = require("./routes/user");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "images"));
+    //[not done: this is still relative to the CWD]
+    cb(null, path.join("images"));
   },
   filename: (req, file, cb) => {
     cb(
