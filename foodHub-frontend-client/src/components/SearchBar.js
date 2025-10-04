@@ -82,6 +82,15 @@ export default function CustomizedInputBase(props) {
     setAddress(value);
     const results = await geocodeByAddress(value);
     const latlng = await getLatLng(results[0]);
+    //[change here]
+    // let results = await axios.get(
+    //   `https://rsapi.goong.io/v2/geocode?address=${value}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
+    // );
+    // results = results.data;
+    // console.log("results", results);
+    // const latlng = results.results[0].geometry.location;
+    console.log("latlng:", latlng);
+
     if (latlng) localStorage.setItem("latlng", `${latlng.lat}, ${latlng.lng}`);
     fetchRestByLocation(latlng);
   };
@@ -102,7 +111,7 @@ export default function CustomizedInputBase(props) {
     };
     axios
       .get(
-        `https://rsapi.goong.io/v2/geocode?latlng=${lat},${long}&key=${process.env.REACT_APP_GOOGLE_API_KEY}`
+        `https://rsapi.goong.io/v2/geocode?latlng=${lat},${long}&limit=5&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
       )
       .then((result) => {
         console.log(result.data);
