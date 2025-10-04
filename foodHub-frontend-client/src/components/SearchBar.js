@@ -1,29 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import MyLocation from "@material-ui/icons/MyLocation";
+import Divider from "@material-ui/core/Divider";
 import LocationOn from "@material-ui/icons/LocationOn";
 import SearchIcon from "@material-ui/icons/Search";
+import { useDispatch } from "react-redux";
+import MyLocation from "@material-ui/icons/MyLocation";
 import axios from "axios";
+import debouncing from "../util/rateLimitting/debouncing";
 import { fetchRestaurantsByAddress } from "../redux/actions/dataActions";
+// Goong API endpoints
+const GOONG_API_KEY = process.env.REACT_APP_GOONG_API_KEY;
+const AUTOCOMPLETE_ENDPOINT = "https://rsapi.goong.io/Place/Autocomplete";
 
+// Giả định makeStyles từ mã gốc
 const useStyles = makeStyles((theme) => ({
   rootHome: {
-    padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 860,
+    width: "90%",
+    margin: "auto",
+    padding: "2px 4px",
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.shape.borderRadius,
+    ["@media (max-width:1024px)"]: {
+      // Giữ responsive như HomeStart
+      flexDirection: "column",
+    },
   },
   rootItems: {
-    padding: "2px 4px",
     display: "flex",
     alignItems: "center",
-    width: 400,
-    backgroundColor: "#edebeb",
+    width: "90%",
+    margin: "auto",
+    padding: "2px 4px",
+    boxShadow: theme.shadows[1],
+    borderRadius: theme.shape.borderRadius,
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -44,8 +59,27 @@ const useStyles = makeStyles((theme) => ({
   divider: {
     height: 28,
     margin: 4,
-  },
+  }
 }));
+
+const processAutoComplete = debouncing(
+  async (inputValue, setSuggestions, setLoading) => {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${AUTOCOMPLETE_ENDPOINT}?api_key=${GOONG_API_KEY}&input=${encodeURIComponent(
+          inputValue
+        )}`
+      );
+      const data = await response.json();
+      setSuggestions(data.predictions || []);
+    } catch (error) {
+      console.error("Autocomplete error:", error);
+    }
+    setLoading(false);
+  },
+  1000
+);
 
 export default function SearchBar(props) {
   const classes = useStyles();
