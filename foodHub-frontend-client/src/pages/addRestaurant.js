@@ -50,6 +50,7 @@ export default function AddRestaurant() {
     if (message.includes("Upload an image")) imageError = message;
   }
 
+  //push the selected images into react image state
   const handleFileSelect = (event) => {
     setImages(event.target.files);
   };
@@ -91,6 +92,10 @@ export default function AddRestaurant() {
     }
   }
 
+  /*fetch the formatted address, latlng, then seller
+  information into database
+  I fucking hate Redux
+  */
   const signupSellerHandle = (props) => {
     const formData = new FormData();
     for (let i = 0; i < images.length; i++) {

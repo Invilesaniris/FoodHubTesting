@@ -1,10 +1,15 @@
 import { useState } from "react";
 
-const useForm = (initialValues, callback) => {
+/*
+input:initial value of input tag, function to handle sunmit event
+output:
+content:
+*/
+const useForm = (initialValues, submitCallback) => {
   const [inputs, setInputs] = useState(initialValues);
   const handleSubmit = (event) => {
     if (event) event.preventDefault();
-    callback();
+    submitCallback();
   };
   const handleInputChange = (event) => {
     event.persist();

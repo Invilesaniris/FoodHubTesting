@@ -89,14 +89,11 @@ function GoongLocationSearchInput({ value, onChange, onSelect }) {
   const [loading, setLoading] = useState(false);
 
   const handleChange = async (inputValue) => {
-    console.log("handleChange===================");
-
     onChange(inputValue); // Cập nhật address state từ parent
     if (inputValue.length < 3) {
       setSuggestions([]);
       return;
     }
-    console.log("processAutoComplete=====================");
 
     processAutoComplete(inputValue, setSuggestions, setLoading);
   };
@@ -160,64 +157,11 @@ function SearchBar({
   const classes = useStyles();
   const [address, setAddress] = useState("");
 
-<<<<<<< HEAD
-  const dispatch = useDispatch();
-
-  const getBrowserLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        getUserAddressBy(position.coords.latitude, position.coords.longitude);
-      },
-      function (error) {
-        alert("The Locator was denied, Please add your address manually");
-      }
-    );
-  };
-
-  const handleSelect = async (value) => {
-    if (value === "") localStorage.removeItem("location");
-    else localStorage.setItem("location", value);
-    setAddress(value);
-    const results = await geocodeByAddress(value);
-    const latlng = await getLatLng(results[0]);
-    //[change here]
-    // let results = await axios.get(
-    //   `https://rsapi.goong.io/v2/geocode?address=${value}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
-    // );
-    // results = results.data;
-    // console.log("results", results);
-    // const latlng = results.results[0].geometry.location;
-    console.log("latlng:", latlng);
-
-    if (latlng) localStorage.setItem("latlng", `${latlng.lat}, ${latlng.lng}`);
-    fetchRestByLocation(latlng);
-  };
-
-  const fetchRestByLocation = (latlng) => {
-    dispatch(fetchRestaurantsByAddress(latlng.lat, latlng.lng));
-    props.action(true);
-  };
-
-  const handleSearch = (event) => {
-    props.handleSearch(event.target.value);
-  };
-
-  const getUserAddressBy = (lat, long) => {
-    const latlng = {
-      lat: lat,
-      lng: long,
-    };
-    axios
-      .get(
-        `https://rsapi.goong.io/v2/geocode?latlng=${lat},${long}&limit=5&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
-      )
-=======
   // Reverse geocoding với Goong API
   const getUserAddressBy = (lat, lng) => {
     const latlng = { lat, lng };
     axios
       .get(`${GEOCODE_ENDPOINT}?address=${lat},${lng}&api_key=${GOONG_API_KEY}`)
->>>>>>> khang
       .then((result) => {
         console.log(result.data);
         const formattedAddress =

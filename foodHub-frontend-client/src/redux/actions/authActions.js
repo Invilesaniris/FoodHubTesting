@@ -85,10 +85,10 @@ export const signupSeller = (newSellerData, history) => (dispatch) => {
     "locality"
   )},+${newSellerData.get("street")},+${newSellerData.get("zip")}`;
   axiosNewInstance
-    .get("https://maps.googleapis.com/maps/api/geocode/json", {
+    .get("https://rsapi.goong.io/v2/geocode", {
       params: {
         address: location,
-        key: process.env.REACT_APP_GOOGLE_API_KEY,
+        api_key: process.env.REACT_APP_GOONG_API_KEY,
       },
     })
     .then((result) => {
