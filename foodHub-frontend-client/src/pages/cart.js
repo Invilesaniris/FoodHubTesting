@@ -71,7 +71,7 @@ const Cart = (props) => {
   let zipError = null;
   let phoneNoError = null;
 
-  if (price !== 0) deliveryCharge = 20;
+  if (price !== 0) deliveryCharge = 30000;
 
   const handlePlaceOrder = () => {
     console.log("handlePlaceOrder at cart.js");
@@ -266,6 +266,7 @@ const Cart = (props) => {
                       <br />
                       <br />
                       <div className={classes.spaceTypo}>
+                        {/* [not done: calculate delivery charge base on distance] */}
                         <span>Delivery Charge</span>
                         <span>
                           {process.env.REACT_APP_CURRENCY} {deliveryCharge}
