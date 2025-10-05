@@ -85,7 +85,8 @@ export default function CartItem(props) {
               {description}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              Rs.{price} x {quantity}
+              {process.env.REACT_APP_CURRENCY}
+              {price} x {quantity}
             </Typography>
 
             <div className={classes.buttons}>
@@ -103,7 +104,7 @@ export default function CartItem(props) {
                 color="textPrimary"
                 className={classes.itemTotal}
               >
-                Rs. {price * quantity}
+                {process.env.REACT_APP_CURRENCY} {price * quantity}
               </Typography>
             </div>
           </CardContent>

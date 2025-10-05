@@ -205,12 +205,15 @@ export const removeCartItem = (itemID) => (dispatch) => {
 };
 
 export const fetchAddress = (userData, history) => (dispatch) => {
+  console.log("fetchAddress at dataAction.js");
+  console.log("goong gecode endpoint", process.env.REACT_APP_GOONG_GEOCODE);
+
   const location = `+${userData.aptName},+${userData.locality},+${userData.street},+${userData.zip}`;
   axiosNewInstance
-    .get("https://maps.googleapis.com/maps/api/geocode/json", {
+    .get(process.env.REACT_APP_GOONG_GEOCODE, {
       params: {
         address: location,
-        key: process.env.REACT_APP_GOOGLE_API_KEY,
+        api_key: process.env.REACT_APP_GOONG_API_KEY,
       },
     })
     .then((result) => {
@@ -224,6 +227,7 @@ export const fetchAddress = (userData, history) => (dispatch) => {
       dispatch(addAddress(userData, history));
     })
     .catch((err) => {
+      console.log("fail");
       console.log(err);
     });
 };

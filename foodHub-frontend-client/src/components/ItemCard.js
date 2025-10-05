@@ -52,6 +52,9 @@ function Alert(props) {
 }
 
 export default function ItemCard(props) {
+  console.log("At ItemCard.js");
+  console.log(process.env.REACT_APP_CURRENCY);
+
   const classes = useStyles();
   const { title, imageUrl, description, price, _id } = props;
   const imageUrlSplit = imageUrl.split("\\");
@@ -140,7 +143,8 @@ export default function ItemCard(props) {
               {description}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              Rs.{price}
+              {process.env.REACT_APP_CURRENCY}
+              {price}
             </Typography>
           </CardContent>
           {role === "ROLE_SELLER" ? (

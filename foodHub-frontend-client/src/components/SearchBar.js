@@ -14,7 +14,7 @@ import debouncing from "../util/rateLimitting/debouncing";
 
 const processAutoComplete = debouncing(async (input, setSuggestions) => {
   const response = await axios.get(
-    `https://rsapi.goong.io/Place/Autocomplete?api_key=${
+    `${process.env.REACT_APP_GOONG_AUTOCOMPLETE}?api_key=${
       process.env.REACT_APP_GOONG_API_KEY
     }&input=${encodeURIComponent(input)}`
   );
@@ -105,7 +105,7 @@ export default function SearchBar(props) {
     };
     axios
       .get(
-        `https://rsapi.goong.io/Geocode?latlng=${lat},${long}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
+        `${process.env.REACT_AP_GOONG_GEOCODE}?latlng=${lat},${long}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
       )
       .then((result) => {
         console.log(result.data);
@@ -128,7 +128,7 @@ export default function SearchBar(props) {
   const getLatLngFromGoong = async (address) => {
     try {
       const response = await axios.get(
-        `https://rsapi.goong.io/Geocode?address=${encodeURIComponent(
+        `${process.env.REACT_APP_GOONG_GEOCODE}?address=${encodeURIComponent(
           address
         )}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
       );
