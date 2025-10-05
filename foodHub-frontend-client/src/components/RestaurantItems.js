@@ -25,6 +25,9 @@ function RestaurantItems(props) {
     account: { role },
   } = useSelector((state) => state.auth);
 
+  console.log("At RestaurantItems.js:");
+  console.log("items:", items);
+
   return (
     <Grid item container direction="row">
       <Grid item xs={12} sm={1} />

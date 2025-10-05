@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Cart = (props) => {
+  console.log("At cart.js:");
   const [step, setStep] = useState(1);
 
   const dispatch = useDispatch();

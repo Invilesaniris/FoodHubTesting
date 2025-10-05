@@ -79,7 +79,7 @@ function App() {
               path="/seller/dashboard"
               component={sellerDash}
             />
-            <h1>LFJALDKJFALDKFJLKJ</h1>
+
             <UserRoute exact path="/cart" component={cart} />
             <UserRoute exact path="/orders" component={orders} />
             <SellerRoute exact path="/seller/orders" component={orders} />

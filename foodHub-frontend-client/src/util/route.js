@@ -20,6 +20,8 @@ export const UserRoute = ({ component: Component, ...rest }) => {
     authenticated,
     account: { role },
   } = useSelector((state) => state.auth);
+  // console.log(props.component);
+  // console.log("props:", ...props);
 
   return (
     <Route

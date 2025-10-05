@@ -18,6 +18,8 @@ export default function Restaurant(props) {
   const restaurant = useSelector((state) => state.data.restaurant);
   const { items } = useSelector((state) => state.data.restaurant);
   const dispatch = useDispatch();
+  console.log("At restaurant.js:");
+  console.log("restaurant redux state:", restaurant);
 
   useEffect(() => {
     if (items) {
@@ -64,6 +66,7 @@ export default function Restaurant(props) {
 
   useEffect(() => {
     console.log("in useEffect restaurant");
+    //HERE: state.data.restaurant get populate by the selected restaurant
     dispatch(fetchRestaurant(restId));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 

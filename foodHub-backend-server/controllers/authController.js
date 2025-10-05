@@ -53,6 +53,7 @@ exports.signupUser = (req, res, next) => {
         password: hashedPassword,
         accountVerifyToken: token,
         accountVerifyTokenExpiration: Date.now() + 3600000,
+        isVerified: true, //[not done: learn Send Grid]
       });
       return account.save();
     })
@@ -155,7 +156,7 @@ exports.login = (req, res, next) => {
     });
 };
 
-exports. signupSeller = (req, res, next) => {
+exports.signupSeller = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -211,6 +212,7 @@ exports. signupSeller = (req, res, next) => {
         password: hashedPassword,
         accountVerifyToken: token,
         accountVerifyTokenExpiration: Date.now() + 3600000,
+        isVerified: true, //[not done: learn SendGrip]
       });
       return account.save();
     })
