@@ -19,6 +19,7 @@ const orderSchema = new Schema(
         "Accepted",
         "Completed",
         "Out For Delivery",
+        "Ready",
       ],
     },
     user: {

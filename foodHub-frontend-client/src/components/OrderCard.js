@@ -94,6 +94,13 @@ const OrderCard = (props) => {
     dispatch(changeOrderStatus(order._id, body));
   };
 
+  const handleReady = () => {
+    const body = {
+      status: "Ready",
+    };
+    dispatch(changeOrderStatus(order._id, body));
+  };
+
   const handleCompleted = () => {
     const body = {
       status: "Completed",
@@ -173,16 +180,24 @@ const OrderCard = (props) => {
             </div>
           </>
         )}
-        {role === "ROLE_SELLER" && order.status === "Accepted" && (
+        {role === "ROLE_SELLER" && order.status === "Ready" && (
           <Button className={classes.buttonAccept} onClick={handleDelivery}>
             Out For Delivery
           </Button>
         )}
-        {role === "ROLE_SELLER" && order.status === "Out For Delivery" && (
+        {role === "ROLE_SELLER" && order.status === "Accepted" && (
+          <Button className={classes.buttonAccept} onClick={handleReady}>
+            Ready
+          </Button>
+        )}
+        {
+          // [NOT DONE: THIS IS FOR DELIVERY PARTNER]
+          /* {role === "ROLE_SELLER" && order.status === "Out For Delivery" && (
           <Button className={classes.buttonAccept} onClick={handleCompleted}>
             Order Completed
           </Button>
-        )}
+        )} */
+        }
         <br />
       </div>
     </Paper>
