@@ -323,9 +323,10 @@ exports.postOrder = (req, res, next) => {
           for (const clientId of Object.keys(app.clients)) {
             // console.log(app.clients[clientId].socket);
             if (clientId.toString() === seller._id.toString()) {
-              io.getIO().sockets.connected[
-                app.clients[clientId].socket
-              ].emit("orders", { action: "create", order: order });
+              io.getIO().sockets.connected[app.clients[clientId].socket].emit(
+                "orders",
+                { action: "create", order: order }
+              );
             }
           }
         });

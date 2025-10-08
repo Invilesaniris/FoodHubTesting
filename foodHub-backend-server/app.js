@@ -7,7 +7,7 @@ const multer = require("multer");
 const dotenv = require("dotenv");
 dotenv.config(path.join(__dirname, ".env"));
 
-const authRoutes = require("./routes/auth");
+const authRoutes = require("./modules/accesscontrol/route/auth");
 const itemRoutes = require("./routes/item");
 const userRoutes = require("./routes/user");
 
