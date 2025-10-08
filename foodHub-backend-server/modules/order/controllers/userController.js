@@ -2,13 +2,13 @@ const { validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");
 
-const Seller = require("../models/seller");
-const Item = require("../models/item");
-const User = require("../models/user");
-const Account = require("../models/account");
-const Order = require("../models/order");
-const io = require("../util/socket");
-const app = require("../app");
+const Seller = require("../../accesscontrol/models/seller");
+const Item = require("../../menu/models/item");
+const User = require("../../accesscontrol/models//user");
+const Account = require("../../accesscontrol/models/account");
+const Order = require("../../order/models/order");
+const io = require("../../../util/socket");
+const app = require("../../../app");
 
 exports.getRestaurants = (req, res, next) => {
   Seller.find()

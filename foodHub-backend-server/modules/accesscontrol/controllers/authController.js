@@ -5,9 +5,9 @@ const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 const jwt = require("jsonwebtoken");
 
-const User = require("../../../models/user");
-const Account = require("../../../models/account");
-const Seller = require("../../../models/seller");
+const User = require("../models/user");
+const Account = require("../models/account");
+const Seller = require("../models/seller");
 // NOT Done (học sendgrid)
 // const transporter = nodemailer.createTransport(
 //   sendgridTransport({

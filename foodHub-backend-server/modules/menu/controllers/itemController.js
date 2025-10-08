@@ -4,8 +4,8 @@ const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 const Item = require("../models/item");
-const Seller = require("../models/seller");
-const Account = require("../models/account");
+const Seller = require("../../accesscontrol/models/seller");
+const Account = require("../../accesscontrol/models/account");
 
 exports.createItem = (req, res, next) => {
   const errors = validationResult(req);

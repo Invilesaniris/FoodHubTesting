@@ -8,8 +8,8 @@ const dotenv = require("dotenv");
 dotenv.config(path.join(__dirname, ".env"));
 
 const authRoutes = require("./modules/accesscontrol/route/auth");
-const itemRoutes = require("./routes/item");
-const userRoutes = require("./routes/user");
+const itemRoutes = require("./modules/menu/route/item");
+const userRoutes = require("./modules/order/route/user");
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
