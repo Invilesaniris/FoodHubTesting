@@ -462,6 +462,9 @@ exports.getRestaurantsByAddress = (req, res, next) => {
     .sort({ createdAt: -1 })
     .then((sellers) => {
       const sellersVerified = sellers.filter((restaurant) => {
+        if (restaurant.account) console.error("yes");
+        else console.error("no");
+
         return restaurant.account.isVerified === true;
       });
 
