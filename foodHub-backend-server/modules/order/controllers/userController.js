@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");
 
 const Seller = require("../../accesscontrol/models/seller");
-const Item = require("../../menu/models/item");
 const User = require("../../accesscontrol/models//user");
 const Account = require("../../accesscontrol/models/account");
 const Order = require("../../order/models/order");
