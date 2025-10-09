@@ -57,22 +57,6 @@ const Home = () => {
                 <span style={{ fontSize: 40 }}>🍽</span>
               </Typography>
             </Grid>
-            <Grid item className={classes.SearchBar}>
-              <SearchBar page="home" action={setLocationStatus} />
-            </Grid>
-            <Grid item container>
-              <Grid item xs={false} sm={1} />
-              <Grid item xs={12} sm={10}>
-                {locationStatus ? (
-                  restaurantMarkup
-                ) : (
-                  <Typography variant="body1" className={classes.center} noWrap>
-                    Enter your location to view nearby restaurants
-                  </Typography>
-                )}
-              </Grid>
-              <Grid item xs={false} sm={1} />
-            </Grid>
           </Grid>
         </>
       )}

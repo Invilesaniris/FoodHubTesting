@@ -68,79 +68,8 @@ export default function SearchBar(props) {
   const [suggestions, setSuggestions] = useState([]); // State cho gợi ý địa chỉ
   const [loading, setLoading] = useState(false); // State cho trạng thái tải
 
-  const getBrowserLocation = () => {
-    navigator.geolocation.getCurrentPosition(
-      function (position) {
-        getUserAddressBy(position.coords.latitude, position.coords.longitude);
-      },
-      function (error) {
-        alert("The Locator was denied, Please add your address manually");
-      }
-    );
-  };
-
-  const handleSelect = async (value) => {
-    if (value === "") localStorage.removeItem("location");
-    else localStorage.setItem("location", value);
-    setAddress(value);
-    setSuggestions([]); // Ẩn danh sách gợi ý sau khi chọn
-    const latlng = await getLatLngFromGoong(value); // Lấy tọa độ từ Goong API
-    if (latlng) localStorage.setItem("latlng", `${latlng.lat}, ${latlng.lng}`);
-    fetchRestByLocation(latlng);
-  };
-
-  const fetchRestByLocation = (latlng) => {
-    dispatch(fetchRestaurantsByAddress(latlng.lat, latlng.lng));
-    props.action(true);
-  };
-
   const handleSearch = (event) => {
     props.handleSearch(event.target.value);
-  };
-
-  const getUserAddressBy = (lat, long) => {
-    const latlng = {
-      lat: lat,
-      lng: long,
-    };
-    axios
-      .get(
-        `${process.env.REACT_AP_GOONG_GEOCODE}?latlng=${lat},${long}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
-      )
-      .then((result) => {
-        console.log(result.data);
-        if (result.data.results[0]?.formatted_address === "")
-          localStorage.removeItem("location");
-        else
-          localStorage.setItem(
-            "location",
-            result.data.results[0].formatted_address
-          );
-        setAddress(result.data.results[0].formatted_address);
-        fetchRestByLocation(latlng);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  // Hàm lấy latlng từ Goong API dựa trên địa chỉ
-  const getLatLngFromGoong = async (address) => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_GOONG_GEOCODE}?address=${encodeURIComponent(
-          address
-        )}&api_key=${process.env.REACT_APP_GOONG_API_KEY}`
-      );
-      const results = response.data.results;
-      if (results.length > 0) {
-        return results[0].geometry.location;
-      }
-      return null;
-    } catch (error) {
-      console.error("Error fetching latlng from Goong:", error);
-      return null;
-    }
   };
 
   // Hàm lấy gợi ý địa chỉ từ Goong API
@@ -186,52 +115,8 @@ export default function SearchBar(props) {
           inputProps={{ "aria-label": "search for items" }}
         />
       )}
-      {page === "home" && (
-        <>
-          <InputBase
-            value={address}
-            onChange={handleInputChange}
-            placeholder="Enter delivery address"
-            className={classes.input}
-            inputProps={{
-              "aria-label": "search goong maps for delivery address",
-            }}
-          />
-          {loading && <div>Loading...</div>}
-          {suggestions.length > 0 && (
-            <div className={classes.results}>
-              {suggestions.map((suggestion, index) => {
-                const style = suggestion.active
-                  ? { backgroundColor: "#41b6e6", cursor: "pointer" }
-                  : { backgroundColor: "#fff", cursor: "pointer" };
-                return (
-                  <div
-                    key={index}
-                    onClick={() => handleSelect(suggestion.description)}
-                    style={style}
-                  >
-                    {suggestion.description}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </>
-      )}
+
       <SearchIcon className={classes.iconButton} />
-      {page === "home" && (
-        <>
-          <Divider className={classes.divider} orientation="vertical" />
-          <IconButton
-            color="primary"
-            className={classes.iconButton}
-            aria-label="directions"
-            onClick={getBrowserLocation}
-          >
-            <MyLocation />
-          </IconButton>
-        </>
-      )}
     </Paper>
   );
 }
