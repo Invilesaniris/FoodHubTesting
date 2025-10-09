@@ -37,7 +37,6 @@ import error404 from "./pages/404";
 import signup from "./pages/sign-up";
 import login from "./pages/login";
 import addRestaurant from "./pages/addRestaurant";
-import restaurant from "./pages/restaurant";
 import sellerDash from "./pages/sellerDashboard";
 import cart from "./pages/cart";
 import orders from "./pages/orders";
@@ -73,7 +72,6 @@ function App() {
             <AuthRoute exact path="/login" component={login} />
             <AuthRoute exact path="/register" component={signup} />
             <AuthRoute exact path="/addrestaurant" component={addRestaurant} />
-            <UserRoute exact path="/order/:restName" component={restaurant} />
             <SellerRoute
               exact
               path="/seller/dashboard"

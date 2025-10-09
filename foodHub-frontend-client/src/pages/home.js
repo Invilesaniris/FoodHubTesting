@@ -10,7 +10,6 @@ import Grid from "@material-ui/core/Grid";
 import HomeStart from "../components/HomeStart";
 import SearchBar from "../components/SearchBar";
 import Spinner from "../util/spinner/spinner";
-import RestaurantContent from "../components/RestaurantContent";
 
 // import store from "../redux/store";
 // import { fetchRestaurantsByAddress } from "../redux/actions/dataActions";
@@ -42,7 +41,6 @@ const Home = () => {
   //   dispatch(fetchRestaurantsByAddress(latlngArray[0], latlngArray[1]));
   // }
 
-  let restaurantMarkup = loading ? <Spinner /> : <RestaurantContent />;
   return (
     <>
       {authenticated && role === "ROLE_SELLER" ? (
