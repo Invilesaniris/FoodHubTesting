@@ -8,7 +8,6 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
 import HomeStart from "../components/HomeStart";
-import SearchBar from "../components/SearchBar";
 import Spinner from "../util/spinner/spinner";
 
 // import store from "../redux/store";
