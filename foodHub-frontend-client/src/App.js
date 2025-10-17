@@ -37,6 +37,7 @@ import error404 from "./pages/404";
 import signup from "./pages/sign-up";
 import login from "./pages/login";
 import addRestaurant from "./pages/addRestaurant";
+import delivery from "./pages/delivery"
 import restaurant from "./pages/restaurant";
 import sellerDash from "./pages/sellerDashboard";
 import cart from "./pages/cart";
@@ -72,6 +73,7 @@ function App() {
             <Route exact path="/" component={home} />
             <AuthRoute exact path="/login" component={login} />
             <AuthRoute exact path="/register" component={signup} />
+            <AuthRoute exact path="/delivery" component={delivery} />
             <AuthRoute exact path="/addrestaurant" component={addRestaurant} />
             <UserRoute exact path="/order/:restName" component={restaurant} />
             <SellerRoute

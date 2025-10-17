@@ -93,13 +93,14 @@ export default function Footer() {
       </Grid>
       <Grid item xs={12} sm={3} className={classes.innerCont}>
         <Typography variant="h5" component="p">
-          FoodHub NewsLetter
+          FoodHub For delivery
         </Typography>
         <Typography variant="body1" component="p" style={{ marginBottom: 28 }}>
-          Stay updated with new offers from FoodHub
+          find a job?become food delivery may be your best choice!!!
         </Typography>
-        <TextField label="Your Email address" variant="outlined" />
-        <Button className={classes.buttonStyleTwo}>SEND</Button>
+        <Link to="">
+              <Button className={classes.buttonStyleTwo}>Become</Button>
+        </Link>
       </Grid>
       <Grid item xs={12} sm={3} className={classes.resources}>
         <Typography variant="h5" component="p">

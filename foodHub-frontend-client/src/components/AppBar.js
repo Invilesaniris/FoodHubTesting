@@ -74,6 +74,25 @@ export default function AppBarPrimary() {
                 Logout
               </Button>
             </div>
+          ) : role === "ROLE_DELIVERY" ? ( // Thêm kiểm tra cho ROLE_DELIVERY
+            <div className={classes.buttons}>
+              <Typography className={classes.buttonStyles}>
+                Hello, {firstName} {lastName}
+              </Typography>
+              <Link to="/profile"> {/* Thêm link Hồ sơ cho Delivery */}
+                <Button className={classes.buttonStyles}>Profile</Button>
+              </Link>
+              <Link to="/delivery/orders"> {/* Có thể là link đơn hàng cho shipper */}
+                <Button className={classes.buttonStyles}>Orders</Button>
+              </Link>
+              <Button
+                onClick={handleLogout}
+                className={classes.buttonStyles}
+                variant="outlined"
+              >
+                Logout
+              </Button>
+            </div>
           ) : (
             <div className={classes.buttons}>
               <Typography className={classes.buttonStyles}>

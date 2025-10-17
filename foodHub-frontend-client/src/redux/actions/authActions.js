@@ -72,6 +72,7 @@ export const getUserData = () => (dispatch) => {
   axios
     .get("/user")
     .then((res) => {
+      console.log("user", res.data.result);
       dispatch({
         type: SET_USER,
         payload: res.data.result,
@@ -126,6 +127,33 @@ export const signupSellerFinal = (newSellerData, history) => (dispatch) => {
       if (err.response) {
         dispatch({
           type: SET_ERRORS_SIGNUP_SELLER,
+          payload: err.response.data,
+        });
+      } else {
+        dispatch({
+          type: SERVER_ERROR,
+        });
+      }
+    });
+};
+
+export const signupDelivery = (newDeliveryData, history) => (dispatch) => {
+  dispatch({ type: LOADING_UI });
+  axios
+    .post("/auth/signup-delivery-partner", newDeliveryData) // Sửa endpoint API cho Delivery
+    .then((res) => {
+      dispatch({
+        type: SIGNUP_SUCCESS,
+      });
+      dispatch({ type: CLEAR_ERRORS });
+      history.push("/login"); // Chuyển hướng đến trang đăng nhập sau khi đăng ký thành công
+    })
+    .catch((err) => {
+      console.log("Lỗi đăng ký Delivery:", err.response);
+      if (err.response) {
+        // Sử dụng SET_ERRORS_SIGNUP_SELLER hoặc tạo một type mới nếu cần phân biệt rõ ràng
+        dispatch({
+          type: SET_ERRORS_SIGNUP_SELLER, 
           payload: err.response.data,
         });
       } else {
