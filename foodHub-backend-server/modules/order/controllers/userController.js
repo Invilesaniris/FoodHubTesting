@@ -322,7 +322,7 @@ exports.postOrder = (req, res, next) => {
       }, {});
 
       for (let [seller, cartItem] of Object.entries(sellers)) {
-        Seller.findById(seller).then((seller) => {
+        Seller.findById(seller).then(async (seller) => {
           const items = cartItem.map((i) => {
             return { quantity: i.quantity, item: { ...i.itemId._doc } };
           });
@@ -342,7 +342,7 @@ exports.postOrder = (req, res, next) => {
             },
           });
 
-          order.save();
+          await order.save();
           for (const clientId of Object.keys(app.clients)) {
             // console.log(app.clients[clientId].socket);
             if (clientId.toString() === seller._id.toString()) {
